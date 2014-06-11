@@ -43,8 +43,7 @@ shapesDrawer = {
       };
 
       function hide() {
-        boxNum -= 1
-        updateBoxNum(boxNum)
+        boxCounter.decrementBoxCount();
         this.setMap();
       }
 
@@ -73,11 +72,8 @@ shapesDrawer = {
       }
 
       klaxon = rowsList.map(function(startpnt) {return startpnt.map(function(stp) {return boxPoints(stp)})});
-      llll = klaxon.map(function(cls){return cls.map(function(shp){return drawExistingShapes(shp)})});
+      llll = klaxon.map(function(cls){return cls.map(function(shp){boxCounter.incrementBoxCount(); return drawExistingShapes(shp)})});
 
-      llll.forEach(function(m){m.forEach(function(){boxNum += 1})});
-
-      updateBoxNum(boxNum);
       return llll
     }
 }
@@ -87,10 +83,30 @@ function btnThing() {
   btn.addEventListener('click', drawThing, false);
 }
 
-function updateBoxNum(bxn) {
-  document.getElementById('boxNum').innerHTML = bxn;
-}
+boxCounter = function(){
+  var boxNum = 0;
+  return {
+    decrementBoxCount: function() {
+      boxNum -= 1;
+      document.getElementById('boxNum').innerHTML = boxNum;
+    },
+
+    incrementBoxCount: function() {
+      boxNum += 1;
+      document.getElementById('boxNum').innerHTML = boxNum;
+    },
+
+    setBoxCount: function(bxn) {
+      boxNum = bxn
+      document.getElementById('boxNum').innerHTML = boxNum;
+    },
+
+    getBoxCount: function() {
+      return boxNum;
+    }
+  };
+}();
 
 window.onload = function() {
-  btnThing()
+  btnThing();
 }
