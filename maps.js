@@ -1,5 +1,5 @@
 
-var site_location = {lat: 41.026024, lon: (-91.960903)}
+var site_location = {lat: 41.559469, lon: (-87.669026)}
 
 function doMap(siteLocation) {
   var mapOptions = {
@@ -17,8 +17,14 @@ function doMap(siteLocation) {
 
 var map = doMap(site_location);
 
+function drawThing() {
+  rw = document.getElementById('rows').value
+  cls = document.getElementById('columns').value
+  shapesDrawer.drawBoxes(rw,cls)
+}
+
 shapesDrawer = {
-    drawBoxes: function() {
+    drawBoxes: function(rows, cols) {
       function drawExistingShapes(points) {
         var shape = new google.maps.Polygon({
           paths: points,
@@ -44,12 +50,12 @@ shapesDrawer = {
 
       startp = startPoint();
       var startPoints = []
-      for (var i = 0; i < 10; i++){startPoints.push([startp.lat(), (startp.lng() + i/10000)])}
+      for (var i = 0; i < cols; i++){startPoints.push([(startp.lat() + 1/10000), (startp.lng() + (0.0001 + i/30000))])}
       function boxPoints(startPoint) {
         return [new google.maps.LatLng(startPoint[0], startPoint[1]),
-                new google.maps.LatLng((startPoint[0] + 0.00005), startPoint[1]),
-                new google.maps.LatLng((startPoint[0] + 0.00005), (startPoint[1] + 0.00005)),
-                new google.maps.LatLng(startPoint[0], (startPoint[1] + 0.00005))
+                new google.maps.LatLng((startPoint[0] + 0.00003), startPoint[1]),
+                new google.maps.LatLng((startPoint[0] + 0.00003), (startPoint[1] + 0.00003)),
+                new google.maps.LatLng(startPoint[0], (startPoint[1] + 0.00003))
         ]
       }
 
@@ -58,4 +64,13 @@ shapesDrawer = {
       drawnShapes = llop.map(function(shp){return drawExistingShapes(shp)})
       return drawnShapes
     }
+}
+
+function btnThing() {
+  btn = document.getElementById('submitButton');
+  btn.addEventListener('click', drawThing, false);
+}
+
+window.onload = function() {
+  btnThing()
 }
