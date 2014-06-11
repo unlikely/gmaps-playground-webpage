@@ -25,6 +25,8 @@ function drawThing() {
 
 shapesDrawer = {
     drawBoxes: function(rows, cols) {
+      boxNum = 0;
+
       function drawExistingShapes(points) {
         var shape = new google.maps.Polygon({
           paths: points,
@@ -41,6 +43,8 @@ shapesDrawer = {
       };
 
       function hide() {
+        boxNum -= 1
+        updateBoxNum(boxNum)
         this.setMap();
       }
 
@@ -68,9 +72,12 @@ shapesDrawer = {
         rowsList.push(calculateRow(org, cols));
       }
 
-      klaxon = rowsList.map(function(startpnt) {return startpnt.map(function(stp) {return boxPoints(stp)})})
-      llll = klaxon.map(function(cls){return cls.map(function(shp){return drawExistingShapes(shp)})})
+      klaxon = rowsList.map(function(startpnt) {return startpnt.map(function(stp) {return boxPoints(stp)})});
+      llll = klaxon.map(function(cls){return cls.map(function(shp){return drawExistingShapes(shp)})});
 
+      llll.forEach(function(m){m.forEach(function(){boxNum += 1})});
+
+      updateBoxNum(boxNum);
       return llll
     }
 }
@@ -78,6 +85,10 @@ shapesDrawer = {
 function btnThing() {
   btn = document.getElementById('submitButton');
   btn.addEventListener('click', drawThing, false);
+}
+
+function updateBoxNum(bxn) {
+  document.getElementById('boxNum').innerHTML = bxn;
 }
 
 window.onload = function() {
