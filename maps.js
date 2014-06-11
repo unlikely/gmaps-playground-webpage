@@ -44,13 +44,16 @@ shapesDrawer = {
         this.setMap();
       }
 
-      function startPoint() {
+      function origin() {
         return map.getBounds().getSouthWest()
       }
 
-      startp = startPoint();
-      var startPoints = []
-      for (var i = 0; i < cols; i++){startPoints.push([(startp.lat() + 1/10000), (startp.lng() + (0.0001 + i/30000))])}
+      function calculateRow(bottomLeft, columns) {
+        var rowStartPoints = [];
+        for (var i = 0; i < columns; i++){rowStartPoints.push([(bottomLeft.lat + 1/10000), (bottomLeft.lng + (0.0001 + i/30000))])};
+        return rowStartPoints
+      }
+
       function boxPoints(startPoint) {
         return [new google.maps.LatLng(startPoint[0], startPoint[1]),
                 new google.maps.LatLng((startPoint[0] + 0.00003), startPoint[1]),
@@ -59,10 +62,16 @@ shapesDrawer = {
         ]
       }
 
-      var llop = startPoints.map(function(stp) {return boxPoints(stp)})
+      rowsList = [];
+      for (var i = 0; i < rows; i++) {
+        org = {lat: (origin().lat() + i/30000), lng: origin().lng()}
+        rowsList.push(calculateRow(org, cols));
+      }
 
-      drawnShapes = llop.map(function(shp){return drawExistingShapes(shp)})
-      return drawnShapes
+      klaxon = rowsList.map(function(startpnt) {return startpnt.map(function(stp) {return boxPoints(stp)})})
+      llll = klaxon.map(function(cls){return cls.map(function(shp){return drawExistingShapes(shp)})})
+
+      return llll
     }
 }
 
