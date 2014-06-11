@@ -1,0 +1,1 @@
+Boilerplate html and Javascript for playing with the Google Maps Drawing API.
