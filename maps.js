@@ -1,6 +1,7 @@
 
 var site_location = {lat: 41.559469, lon: (-87.669026)}
 var mrg = []
+var boxen = []
 
 function doMap(siteLocation) {
   var mapOptions = {
@@ -21,7 +22,7 @@ var map = doMap(site_location);
 function drawThing() {
   rw = document.getElementById('rows').value
   cls = document.getElementById('columns').value
-  shapesDrawer.drawBoxes(rw,cls)
+  boxen = shapesDrawer.drawBoxes(rw,cls)
 }
 
 // todo: rewrite this to use function-that-returns-object style
@@ -84,14 +85,20 @@ var shapesDrawer = {
         )
       }
 
-
-
       klaxon = makeBoxPoints(listStartPoints(origin(), rows, cols))
       llll = klaxon.map(function(cls){return cls.map(function(shp){boxCounter.incrementBoxCount(); return drawExistingShapes(shp)})});
       mrg = [].concat.apply([], llll);
 
       return llll
     }
+}
+
+function listShownBoxen(boxes) {
+  return boxes.map(function(zim) {
+    return zim.filter(function(zed) {
+      return zed.getMap() === map
+    })
+  })
 }
 
 function btnThing() {
@@ -101,6 +108,7 @@ function btnThing() {
   btn2.addEventListener('click', drawDeletingRectangle.toggleDrawing, false);
 }
 
+// todo: change box count to reflect deletingRectangle
 var boxCounter = function(){
   var boxNum = 0;
   return {
